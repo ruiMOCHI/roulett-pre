@@ -22,7 +22,7 @@ const names = [
     '#e8f8f5', '#f2f3f4', '#fdfefe', '#e5e8e8', '#fcf3cf', '#fceae7', '#eaf2f8',
     '#fef5e7'
   ];
-  
+
   function createWheel() {
     wheel.innerHTML = '';
   
@@ -31,34 +31,48 @@ const names = [
       slice.className = 'slice';
   
       const angle = i * anglePerSlice;
-  
       slice.style.transform = `rotate(${angle}deg) skewY(${90 - anglePerSlice}deg)`;
-      slice.style.backgroundColor = colors[i % colors.length];
+      slice.style.backgroundColor = colors[i % colors.length]; // ← 元に戻す
   
-      // 番号を表示
-      const label = document.createElement('div');
-      label.className = 'label';
-      label.innerText = `${i + 1}`;
-      label.style.transform = `rotate(${anglePerSlice / 2}deg) translate(10px, -100%)`;
+      if (i === 0 || i === 18) {
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.innerText = `${i + 1}`;
+        label.style.transform = `rotate(${anglePerSlice / 2}deg) translate(60px, -10px)`;
+        slice.appendChild(label);
+      }
   
-      slice.appendChild(label);
       wheel.appendChild(slice);
     });
   }
+
   
   function createNameList() {
-    const html = names.map((name, i) => `${i + 1}. ${name}`).join('<br>');
+    const html = names.map((name, i) => {
+      const color = colors[i % colors.length];
+      return `<div class="name-item"><div class="color-box" style="background-color: ${color};"></div>${i + 1}. ${name}</div>`;
+    }).join('');
     nameListDiv.innerHTML = `<strong>番号一覧</strong><br>${html}`;
   }
+
+
+//   function spin() {
+//     const stopAngle = 360 * 10 + (360 - (winningIndex * anglePerSlice)) - anglePerSlice / 2;
+//     wheel.style.transform = `rotate(${stopAngle}deg)`;
   
+//     setTimeout(() => {
+//       resultText.textContent = `当選者: ${winningIndex + 1}. ${names[winningIndex]}`;
+//     }, 5000);
+//   }
   function spin() {
-    const stopAngle = 360 * 10 + (360 - (winningIndex * anglePerSlice)) - anglePerSlice / 2;
+    const stopAngle = 360 * 10 + (360 - (winningIndex * anglePerSlice)) - anglePerSlice / 2 + 190;
     wheel.style.transform = `rotate(${stopAngle}deg)`;
   
     setTimeout(() => {
       resultText.textContent = `当選者: ${winningIndex + 1}. ${names[winningIndex]}`;
     }, 5000);
   }
+  
   
   createWheel();
   createNameList();
